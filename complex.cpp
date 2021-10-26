@@ -1,113 +1,99 @@
-#include <iostream>
-#include <math.h>
-#include <complex>
-class Number {
+#include<iostream>
+#include<math.h>
+float PolReal(float x, float y)
+{
+    float w;
+	w = (x * cos(y));
+    return w;
+}
+float PolImag(float x, float y)
+{
+    float w;
+    w = (x * sin(y));
+    return w;
+}
+class Complex {
+private:
+    double Real, Imag;
 public:
-    float argument, A, z[8], angle;
+    Complex() {
+        this->Real = 0.0;
+        this->Imag = 0.0;
+    }
 
-    float ar = A * sin(angle);
-    float br = A * cos(angle);
-    friend std::ostream& operator<< (std::ostream& out, const Number& point);
+    Complex(double real, double img) {
+        this->Real = real;
+        this->Imag = img;
+    }
+
+    friend Complex operator + (Complex const&, Complex const&);
+    friend Complex operator - (Complex const&, Complex const&);
+    friend Complex operator * (Complex const&, Complex const&);
+    friend bool operator == (Complex const&, Complex const&);
+    friend bool operator > (Complex const&, Complex const&);
+    friend bool operator < (Complex const&, Complex const&);
+    friend std::ostream& operator<< (std::ostream& out, Complex z);
+    friend std::istream& operator>> (std::istream& is, Complex z);
 };
-float PolReal(int A, float angle)
-{
-    return A * sin(angle);
-}
-float PolImag(int A, float angle)
-{
-    return A * cos(angle);
-}
-class Den
-{    
-public:
-    Number op;
-    double pi = 3.14159265359;
-    int A1, A2;// = 4 = 9;
-    float angle1= pi / 6, angle2  = pi / 3;
-    float a[2] = { PolReal(A1,angle1), PolReal(A2,angle2)};
-    float b[2] = { PolImag(A1,angle1), PolImag(A2,angle2)};
 
-};
- 
-void print(Number op) {
-    std::cout << op.z[0] << " + i" << op.z[1] << std::endl;
-}
-Number operator +(Number A, Den B)
+Complex operator + (Complex const& c1, Complex const& c2)
 {
-    Number op;
-    op.z[0] = B.a[0] + B.a[1];
-    op.z[1] = B.b[0] + B.b[1];
-    return op;
+    return Complex(c1.Real + c2.Real, c1.Imag + c2.Imag);
 }
-Number operator -(Number A, Den B)
+Complex operator - (Complex const& c1, Complex const& c2)
 {
-    Number op;
-    op.z[0] = B.a[0] - B.a[1];
-    op.z[1] = B.b[0] - B.b[1];
-    return op;
+    return Complex(c1.Real - c2.Real, c1.Imag - c2.Imag);
 }
-Number operator *(Number A, Den B)
+Complex operator * (Complex const& c1, Complex const& c2)
 {
-    Number op;
-    op.z[0] = (B.a[0] * B.a[1]) - (B.b[0] * B.b[1]);
-    op.z[1] = (B.a[0] * B.b[1]) + (B.a[1] * B.b[0]);
-    std:: cout << op.z[0];
-    return op;
+    return Complex(((c1.Real * c2.Real) - (c1.Imag * c2.Imag)), ((c1.Real * c2.Imag) - (c1.Imag * c2.Real)));
 }
-bool operator ==(Number A, Den B)
-{
-    return B.a[0] == B.a[1] && B.b[0] == B.b[1];
-    //return op;
-}
-bool operator <(Number A, Den B)
-{
-    return B.a[0] < B.a[1] && B.b[0] < B.b[1];
-}
-bool operator >(Number A, Den B)
-{
-    return B.a[0] > B.a[1] && B.b[0] > B.b[1];
-}
-//Number operator <<(Number A, Den B)
-//{
-//    Number op;
-//    std::cout << op.z[0] << " + i" << op.z[1] << std::endl;
-//}
-std::ostream& operator<<(std::ostream& out, const Number& point)
-{
-    Number op;
-    out << point.z[0] << " + i" << point.z[1] << std::endl;
 
-    return out;
-}
-std::istream& operator>> (std::istream& in, Den& point)
+bool operator ==(Complex const& c1, Complex const& c2)
 {
-    // Поскольку operator>> является другом класса Point, то мы имеем прямой доступ к членам Point.
-    // Обратите внимание, параметр point (объект класса Point) должен быть неконстантным, чтобы мы имели возможность изменить члены класса
-    in >> point.A1;
-    in >> point.A2;
-    //in >> point.angle1;
-    //in >> point.angle1;
-    return in;
+    return c1.Real == c2.Real && c1.Imag == c2.Imag;
+}
+bool operator <(Complex const& c1, Complex const& c2)
+{
+    return c1.Real < c2.Real && c1.Imag < c2.Imag;
+}
+bool operator >(Complex const& c1, Complex const& c2)
+{
+    return c1.Real > c2.Real && c1.Imag > c2.Imag;
+}
+std::ostream& operator<<(std::ostream& out, Complex z)
+{
+	out <<z.Real << " + i" << z.Imag << std::endl;
+	return out;
+}
+std::istream& operator>> (std::istream& is, Complex z)
+{
+    is >> z ;
+    return is;
 }
 int main()
 {
-    //Number fin;
-    Number A, fin;
-    Den B,point;
-    std::cin >> point;
-    bool b1 = A == B;
-    bool b2 = A < B;
-    bool b3 = A > B;
-    std::cout << b1 << b2 << b3 <<std::endl;
-    std::cout  << B.a[0] << " + i" << B.b[0] << " + " << B.a[1] << " + i" << B.b[1] << " = ";
-    fin = A + B;
-    print(fin);
-    std::cout << B.a[0] << " + i" << B.b[0] << " - " << B.a[1] << " + i" << B.b[1] << " = ";
-    fin = A - B;
-    print(fin);
-    std::cout << B.a[0] << " + i" << B.b[0] << " * " << B.a[1] << " + i" << B.b[1] << " = ";
-    fin = A * B;
-    print(fin);
-
+    float a1, a2, b1, b2;
+    std::cin >> a1 >> a2 >> b1 >> b2;
+    Complex c1(PolReal(a1,a2), PolImag(a1, a2)), c2(PolReal(b1, b2), PolImag(b1, b2));
+    Complex c3;
+    std::cout << c1;
+    std::cout << c2;
+    bool equal = c1 == c2;
+    bool smaller = c1 < c2;
+    bool bigger = c1 > c2;
+    if (equal == 1)
+        std::cout << " Complex numbers are equal\n";
+    if (bigger == 1)
+        std::cout << " First complex number is bigger\n";
+    if(smaller == 1)
+        std::cout << " Second complex number is bigger\n";
+    std::cout << equal << smaller << bigger << std::endl;
+    c3 = c1 + c2; 
+    std::cout << c3;
+    c3 = c1 - c2;
+    std::cout << c3;
+    c3 = c1 * c2;
+    std::cout << c3;
     return 0;
 }
